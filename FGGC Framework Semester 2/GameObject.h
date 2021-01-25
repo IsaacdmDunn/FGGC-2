@@ -4,6 +4,7 @@
 #include <d3d11_1.h>
 #include <string>
 #include "Debug.h"
+#include "Transform.h"
 
 using namespace DirectX;
 using namespace std;
@@ -81,5 +82,6 @@ private:
 
 	GameObject * _parent;
 	Debug debug;
+	Transform transform;
 };
 
