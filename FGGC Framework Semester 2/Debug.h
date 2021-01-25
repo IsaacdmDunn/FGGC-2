@@ -12,4 +12,5 @@ public:
 	Debug();
 	~Debug();
 	void DebugMessage();
+	void DebugMessage(std::string message);
 };

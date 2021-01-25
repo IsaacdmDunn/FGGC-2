@@ -6,7 +6,7 @@ GameObject::GameObject(string type, Geometry geometry, Material material) : _geo
 	_position = XMFLOAT3();
 	_rotation = XMFLOAT3();
 	_scale = XMFLOAT3(1.0f, 1.0f, 1.0f);
-
+	debug.DebugMessage(type + " %d \n");
 	_textureRV = nullptr;
 }
 

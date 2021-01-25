@@ -1,5 +1,8 @@
 #include "Application.h"
 
+#define FPS_60 0.16f
+#define FPS_30 0.33f
+
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	PAINTSTRUCT ps;
@@ -681,15 +684,16 @@ void Application::moveBackward(int objectNumber)
 void Application::Update()
 {
     // Update our time
-    static float timeSinceStart = 0.0f;
+    static float deltaTime = 0.0f;
     static DWORD dwTimeStart = 0;
 
     DWORD dwTimeCur = GetTickCount64();
 
-    if (dwTimeStart == 0)
-        dwTimeStart = dwTimeCur;
+	deltaTime += (dwTimeCur - dwTimeStart) / 1000.0f;
+	if (deltaTime < FPS_60) {
+		return;
+	}
 
-	timeSinceStart = (dwTimeCur - dwTimeStart) / 1000.0f;
 
 	// Move gameobject
 	if (GetAsyncKeyState('1'))
@@ -725,8 +729,10 @@ void Application::Update()
 	// Update objects
 	for (auto gameObject : _gameObjects)
 	{
-		gameObject->Update(timeSinceStart);
+		gameObject->Update(deltaTime);
 	}
+
+	deltaTime = deltaTime - FPS_60;
 }
 
 void Application::Draw()
