@@ -696,20 +696,20 @@ void Application::Update()
 
 
 	// Move gameobject
-	if (GetAsyncKeyState('1'))
+	if (GetKeyState('1') && 0x8000)
 	{
 		moveForward(1);
 	}
-	if (GetAsyncKeyState('2'))
+	if (GetKeyState('2') && 0x8000)
 	{
 		moveForward(2);
 	}
 
-	if (GetAsyncKeyState('3'))
+	if (GetKeyState('3') && 0x8000)
 	{
 		moveBackward(3);
 	}
-	if (GetAsyncKeyState('4'))
+	if (GetKeyState('4') && 0x8000)
 	{
 		moveBackward(4);
 	}
