@@ -5,6 +5,7 @@
 #include <string>
 #include "Debug.h"
 #include "Transform.h"
+#include "ParticleModel.h"
 
 using namespace DirectX;
 using namespace std;
@@ -51,6 +52,7 @@ public:
 	void Draw(ID3D11DeviceContext * pImmediateContext);
 
 	Transform* _transform;
+	ParticleModel* particleModel;
 private:
 	XMFLOAT3 _position;
 	XMFLOAT3 _rotation;

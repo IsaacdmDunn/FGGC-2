@@ -45,7 +45,7 @@ public:
     float square(const vector3d& vec);   //gives square of the vector
     float distance(const vector3d& vec); //distance between two vectors
     float magnitude(const vector3d& vec);  //magnitude of the vector
-
+    vector3d addScaledVector(const vector3d& vector, float scale);
 
     //Display operations 
     float show_X(); //return x

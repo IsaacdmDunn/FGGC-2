@@ -143,6 +143,14 @@ float vector3d::magnitude(const vector3d& vec)
 	return (sqrtf(powf(vec.x, 2) + powf(vec.y, 2) + powf(vec.z, 2)));
 }
 
+vector3d vector3d::addScaledVector(const vector3d& vector, float scale)
+{
+	x += vector.x * scale;
+	y += vector.x * scale;
+	z += vector.x * scale;
+	return vector3d(x,y,z);
+}
+
 //finds x of vector
 float vector3d::show_X()
 {

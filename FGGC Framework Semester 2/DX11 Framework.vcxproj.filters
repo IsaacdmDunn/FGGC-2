@@ -23,6 +23,7 @@
     <ClInclude Include="Debug.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="Vector3D.h" />
+    <ClInclude Include="ParticleModel.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
@@ -34,6 +35,7 @@
     <ClCompile Include="Debug.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="Vector3D.cpp" />
+    <ClCompile Include="ParticleModel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <CLInclude Include="resource.h">

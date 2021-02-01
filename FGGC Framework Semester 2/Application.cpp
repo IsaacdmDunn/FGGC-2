@@ -78,6 +78,7 @@ Application::Application()
 	RSCullNone = nullptr;
 	 _WindowHeight = 0;
 	 _WindowWidth = 0;
+	 
 }
 
 Application::~Application()
@@ -670,14 +671,15 @@ void Application::Cleanup()
 void Application::moveForward(int objectNumber)
 {
 	XMFLOAT3 position = _gameObjects[objectNumber]->_transform->GetPosition();
-	position.z -= 0.02f;
+	position.x -= _gameObjects[1]->particleModel->GetPosition().x;
 	_gameObjects[objectNumber]->_transform->SetPosition(position);
 }
 
 void Application::moveBackward(int objectNumber)
 {
 	XMFLOAT3 position = _gameObjects[objectNumber-2]->_transform->GetPosition();
-	position.z += 0.02f;
+	position.x += _gameObjects[1]->particleModel->GetPosition().x;
+	
 	_gameObjects[objectNumber-2]->_transform->SetPosition(position);
 }
 
@@ -687,26 +689,38 @@ void Application::Update()
     static float deltaTime = 0.0f;
     static DWORD dwTimeStart = 0;
 
-    DWORD dwTimeCur = GetTickCount64();
+	if (dwTimeStart ==0)
+	{
+		dwTimeStart = GetTickCount();
+	}
+
+    float dwTimeCur = GetTickCount64();
 
 	deltaTime += (dwTimeCur - dwTimeStart) / 1000.0f;
 	if (deltaTime < FPS_60) {
 		return;
 	}
+	
+
 
 
 	// Move gameobject
-	if (GetKeyState('1') && 0x8000)
+	if (GetAsyncKeyState('1') && 0x8000)
 	{
+		_gameObjects[1]->particleModel->SetAcceleration(vector3d(0.1f, -20.0f, 0.0f));
+		_gameObjects[1]->particleModel->Update(deltaTime);
 		moveForward(1);
+		
 	}
 	if (GetKeyState('2') && 0x8000)
 	{
 		moveForward(2);
 	}
 
-	if (GetKeyState('3') && 0x8000)
+	if (GetAsyncKeyState('3') && 0x8000)
 	{
+		_gameObjects[1]->particleModel->SetAcceleration(vector3d(0.1f, -20.0f, 0.0f));
+		_gameObjects[1]->particleModel->Update(deltaTime);
 		moveBackward(3);
 	}
 	if (GetKeyState('4') && 0x8000)
@@ -732,7 +746,14 @@ void Application::Update()
 		gameObject->Update(deltaTime);
 	}
 
+	dwTimeStart = dwTimeCur;
 	deltaTime = deltaTime - FPS_60;
+	
+	static int i = 0;
+	char sz[1024] = { 0 };
+	printf_s(sz, "the deltatime = %f \n", deltaTime);
+	OutputDebugStringA(sz);
+	i++;
 }
 
 void Application::Draw()
