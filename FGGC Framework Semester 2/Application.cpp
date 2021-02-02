@@ -171,7 +171,7 @@ HRESULT Application::Initialise(HINSTANCE hInstance, int nCmdShow)
 	{
 		gameObject = new GameObject("Cube " + i, cubeGeometry, shinyMaterial);
 		gameObject->_transform->SetScale(0.5f, 0.5f, 0.5f);
-		gameObject->_transform->SetPosition(-4.0f + (i * 2.0f), 0.5f, 10.0f);
+		gameObject->_transform->SetPosition(0 + (0), 0, 10.0f);
 		gameObject->SetTextureRV(_pTextureRV);
 
 		_gameObjects.push_back(gameObject);
@@ -181,6 +181,12 @@ HRESULT Application::Initialise(HINSTANCE hInstance, int nCmdShow)
 	gameObject->_transform->SetPosition(-4.0f, 0.5f, 10.0f);
 	gameObject->SetTextureRV(_pTextureRV);
 	_gameObjects.push_back(gameObject);
+	_gameObjects[1]->particleModel->SetUsingConstAccel(true);
+	_gameObjects[2]->particleModel->SetUsingConstAccel(true);
+	_gameObjects[1]->particleModel->SetVelocity(vector3d(0.0f, 0.1f, 0.0f));
+	_gameObjects[2]->particleModel->SetVelocity(vector3d(0.0f, 0.1f, 0.0f));
+	_gameObjects[2]->particleModel->SetAcceleration(vector3d(0, 1.1, 0.0f));
+	_gameObjects[1]->particleModel->SetAcceleration(vector3d(0, 1.11, 0.0f));
 	return S_OK;
 }
 
@@ -671,14 +677,18 @@ void Application::Cleanup()
 void Application::moveForward(int objectNumber)
 {
 	XMFLOAT3 position = _gameObjects[objectNumber]->_transform->GetPosition();
-	position.x -= _gameObjects[1]->particleModel->GetPosition().x;
+	position.x += _gameObjects[objectNumber]->particleModel->GetPosition().x;
+	position.y += _gameObjects[objectNumber]->particleModel->GetPosition().y;
+	position.z += _gameObjects[objectNumber]->particleModel->GetPosition().z;
 	_gameObjects[objectNumber]->_transform->SetPosition(position);
 }
 
 void Application::moveBackward(int objectNumber)
 {
 	XMFLOAT3 position = _gameObjects[objectNumber-2]->_transform->GetPosition();
-	position.x += _gameObjects[1]->particleModel->GetPosition().x;
+	position.x -= _gameObjects[objectNumber - 2]->particleModel->GetPosition().x;
+	position.y -= _gameObjects[objectNumber - 2]->particleModel->GetPosition().y;
+	position.z -= _gameObjects[objectNumber - 2]->particleModel->GetPosition().z;
 	
 	_gameObjects[objectNumber-2]->_transform->SetPosition(position);
 }
@@ -705,10 +715,8 @@ void Application::Update()
 
 
 	// Move gameobject
-	if (GetAsyncKeyState('1') && 0x8000)
+	if (GetKeyState('1') && 0x8000)
 	{
-		_gameObjects[1]->particleModel->SetAcceleration(vector3d(0.1f, -20.0f, 0.0f));
-		_gameObjects[1]->particleModel->Update(deltaTime);
 		moveForward(1);
 		
 	}
@@ -717,10 +725,8 @@ void Application::Update()
 		moveForward(2);
 	}
 
-	if (GetAsyncKeyState('3') && 0x8000)
+	if (GetKeyState('3') && 0x8000)
 	{
-		_gameObjects[1]->particleModel->SetAcceleration(vector3d(0.1f, -20.0f, 0.0f));
-		_gameObjects[1]->particleModel->Update(deltaTime);
 		moveBackward(3);
 	}
 	if (GetKeyState('4') && 0x8000)
@@ -749,11 +755,6 @@ void Application::Update()
 	dwTimeStart = dwTimeCur;
 	deltaTime = deltaTime - FPS_60;
 	
-	static int i = 0;
-	char sz[1024] = { 0 };
-	printf_s(sz, "the deltatime = %f \n", deltaTime);
-	OutputDebugStringA(sz);
-	i++;
 }
 
 void Application::Draw()

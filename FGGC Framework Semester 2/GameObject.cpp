@@ -12,7 +12,7 @@ GameObject::GameObject(string type, Geometry geometry, Material material) : _geo
 	_transform->SetScale(1,1,1);
 	//_debug.DebugMessage(type + " %d \n");
 	_textureRV = nullptr;
-	particleModel = new ParticleModel({ 0,0,0 }, { 0,0,0 }, { 0,0,0 });
+	particleModel = new ParticleModel(_transform, true, { 0,0,0 }, { 0,0,0 }, 0, { 0,0,0 });
 }
 
 GameObject::~GameObject()
@@ -21,13 +21,7 @@ GameObject::~GameObject()
 
 void GameObject::Update(float t)
 {
-	/*particleModel->SetPosition(vector3d(.0001, .00005, 0));
-	particleModel->SetMass(10.0f);
-	particleModel->SetVelocity(vector3d(1.0f, 3.0f, 0.0f));
-	particleModel->SetAcceleration(vector3d(0.0f, -20.0f, 0.0f));
-	particleModel->SetDamping(0.90f);
-	particleModel->ClearAcc();
-	particleModel->Intergrate(t);*/
+	particleModel->Update(t);
 
 	// Calculate world matrix
 	XMMATRIX scale = XMMatrixScaling(_transform->GetScale().x, _transform->GetScale().y, _transform->GetScale().z);
