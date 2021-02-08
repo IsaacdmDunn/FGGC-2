@@ -18,12 +18,13 @@ protected:
 	bool _useConstAccel;
 	float _dragFactor;
 	vector3d _drag;
-	bool isLaminar;
+	bool _isLaminar;
 
 
 
 public:
-	ParticleModel(Transform* transform, bool useConstAccel, vector3d initialVelocity, vector3d initialAcceleration, float mass, vector3d netForce);
+	ParticleModel(Transform* transform, vector3d initialVelocity, vector3d initialAcceleration, 
+		float mass, vector3d netForce);
 	~ParticleModel();
 
 	/*void PositionUpdate(float deltaTime);
@@ -50,6 +51,8 @@ public:
 	void AddForce(vector3d force);
 	void SetUsingConstAccel(bool useConstAccel);
 	float GetUsingConstAccel();
+	void SetUsingLaminarFlow(bool isLaminar);
+	float GetUsingLaminarFlow();
 
 	void Update(float deltaTime);
 	void MoveConstVelocity(const float deltaTime);

@@ -1,14 +1,16 @@
 #include "ParticleModel.h"
 
-ParticleModel::ParticleModel(Transform* transform, bool useConstAccel, vector3d initialVelocity, vector3d initialAcceleration, float mass, vector3d netForce)
+ParticleModel::ParticleModel(Transform* transform, vector3d initialVelocity, vector3d initialAcceleration,
+	float mass, vector3d netForce)
 {
+	_weight = _mass * 9.81f;
 	_velocity = initialVelocity;
 	_position.x = transform->GetPosition().x;
 	_position.y = transform->GetPosition().y;
 	_position.z = transform->GetPosition().z;
 	_mass = mass;
 	_netForce = netForce;
-	_weight = _mass * 9.81f;
+	_dragFactor = 0.75;
 }
 
 ParticleModel::~ParticleModel()
@@ -19,19 +21,10 @@ ParticleModel::~ParticleModel()
 
 void ParticleModel::Update(float deltaTime)
 {
-	if (_useConstAccel)
-	{
-		MoveConstAcceleration(deltaTime);
-	}
-	else
-	{
-		MoveConstVelocity(deltaTime);
-	}
+	MotionInFluid(deltaTime);
 
-	if (_position.y <= 0)
-	{
-		_weight = 0;
-	}
+	_previousVelocity = _velocity;
+	_previousPosition = _position;
 }
 
 void ParticleModel::MoveConstVelocity(const float deltaTime)
@@ -52,9 +45,20 @@ void ParticleModel::UpdateNetForce()
 {
 	// calculate net external force
 	//for each force{ // for example:  thrust, brake force, friction force
-	_netForce.x += 0;//force.x;
-	_netForce.y += _weight;//force.y;
-	_netForce.z += 0;//force.z;
+	_netForce = _velocity -_drag;
+
+
+
+	
+	if (_position.y < -0.03)
+	{
+		_netForce.y = -_netForce.y;
+	}
+	else
+	{
+		_weight = _mass * 9.81f;
+		_netForce.y -= ((_weight * 0.1f) - _drag.y - _velocity.y) * 0.001f;
+	}
 	//}
 }
 
@@ -70,20 +74,21 @@ void ParticleModel::UpdateAccel()
 void ParticleModel::UpdateState(float deltaTime)
 {
 	UpdateNetForce();
-	UpdateAccel();
-	//MoveConstAcceleration(deltaTime);
+	UpdateAccel(); 
+	MoveConstAcceleration(deltaTime);
 }
 
 void ParticleModel::MotionInFluid(float deltaTime)
 {
+	
+	//
 	DragForce(_velocity, _dragFactor);
 	UpdateState(deltaTime);
-	MoveConstAcceleration(deltaTime);
 }
 
 void ParticleModel::DragForce(vector3d velocity, float dragFactor)
 {
-	if (isLaminar)
+	if (_isLaminar)
 	{
 		DragLamFlow();
 	}
@@ -107,9 +112,13 @@ void ParticleModel::DragTurbFlow()
 
 	float dragMagnitude = _dragFactor * magVelocity * magVelocity;
 
-	_drag.x = -dragMagnitude * unitVelocity.x;
-	_drag.y = -dragMagnitude * unitVelocity.y;
-	_drag.z = -dragMagnitude * unitVelocity.z;
+	_drag.x = -dragMagnitude * _dragFactor * unitVelocity.x;
+	_drag.y = -dragMagnitude * _dragFactor * unitVelocity.y;
+	_drag.z = -dragMagnitude * _dragFactor * unitVelocity.z;
+	
+	/*_drag.x = 0.5f * _mass * _dragFactor * _velocity.x * _velocity.x;
+	_drag.y = 0.5f * _mass * _dragFactor * _velocity.y * _velocity.y;
+	_drag.z = 0.5f * _mass * _dragFactor * _velocity.z * _velocity.z;*/
 }
 
 void ParticleModel::SetVelocity(vector3d velocity)
@@ -150,6 +159,16 @@ void ParticleModel::SetUsingConstAccel(bool useConstAccel)
 float ParticleModel::GetUsingConstAccel()
 {
 	return _useConstAccel;
+}
+
+void ParticleModel::SetUsingLaminarFlow(bool isLaminar)
+{
+	_isLaminar = isLaminar;
+}
+
+float ParticleModel::GetUsingLaminarFlow()
+{
+	return _isLaminar;
 }
 
 void ParticleModel::SetPosition(vector3d position)
@@ -195,7 +214,7 @@ float ParticleModel::GetInverseMass()
 
 void ParticleModel::SetDamping(float damping)
 {
-	_damping = damping;
+	_dragFactor = damping;
 }
 
 float ParticleModel::GetDamping()

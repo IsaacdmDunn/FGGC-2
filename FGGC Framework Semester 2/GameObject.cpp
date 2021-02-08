@@ -8,11 +8,11 @@ GameObject::GameObject(string type, Geometry geometry, Material material) : _geo
 	_scale = XMFLOAT3(1.0f, 1.0f, 1.0f);//
 	_transform = new Transform();
 	_transform->SetPosition(0,0,0);
-	_transform->SetRotation(0,0,0);
+	_transform->SetRotation(0,0,0); 
 	_transform->SetScale(1,1,1);
 	//_debug.DebugMessage(type + " %d \n");
 	_textureRV = nullptr;
-	particleModel = new ParticleModel(_transform, true, { 0,0,0 }, { 0,0,0 }, 0, { 0,0,0 });
+	particleModel = new ParticleModel(_transform, { 0,0,0 }, { 0,0,0 }, 1000, { 0,0,0 });
 }
 
 GameObject::~GameObject()

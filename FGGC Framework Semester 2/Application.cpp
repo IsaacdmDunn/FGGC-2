@@ -1,7 +1,7 @@
 #include "Application.h"
 
-#define FPS_60 0.16f
-#define FPS_30 0.33f
+#define FPS_60 0.016f
+#define FPS_30 0.033f
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -183,10 +183,17 @@ HRESULT Application::Initialise(HINSTANCE hInstance, int nCmdShow)
 	_gameObjects.push_back(gameObject);
 	_gameObjects[1]->particleModel->SetUsingConstAccel(true);
 	_gameObjects[2]->particleModel->SetUsingConstAccel(true);
-	_gameObjects[1]->particleModel->SetVelocity(vector3d(0.0f, 0.1f, 0.0f));
-	_gameObjects[2]->particleModel->SetVelocity(vector3d(0.0f, 0.1f, 0.0f));
-	_gameObjects[2]->particleModel->SetAcceleration(vector3d(0, 1.1, 0.0f));
-	_gameObjects[1]->particleModel->SetAcceleration(vector3d(0, 1.11, 0.0f));
+	_gameObjects[2]->particleModel->SetUsingLaminarFlow(true);
+	_gameObjects[1]->particleModel->SetUsingLaminarFlow(false);
+	_gameObjects[1]->_transform->SetPosition(-5.1f, 4.0f, 0.0f);
+	_gameObjects[2]->_transform->SetPosition(-5.1f, 4.0f, 0.0f);
+	_gameObjects[1]->particleModel->SetVelocity(vector3d(100.1f, 0, 0.0f));
+	_gameObjects[2]->particleModel->SetVelocity(vector3d(100.1f, 0, 0.0f));
+	_gameObjects[2]->particleModel->SetAcceleration(vector3d(1.1, 1, 0.0f));
+	_gameObjects[1]->particleModel->SetAcceleration(vector3d(1.1, 1, 0.0f));
+	_gameObjects[2]->particleModel->SetDamping(0.75f);
+	_gameObjects[2]->particleModel->SetMass(100.2);
+	_gameObjects[1]->particleModel->SetMass(10.2);
 	return S_OK;
 }
 
@@ -706,19 +713,40 @@ void Application::Update()
 
     float dwTimeCur = GetTickCount64();
 
-	deltaTime += (dwTimeCur - dwTimeStart) / 1000.0f;
+	deltaTime += (dwTimeCur - dwTimeStart) / 10000.0f;
 	if (deltaTime < FPS_60) {
 		return;
 	}
-	
 
 
 
 	// Move gameobject
-	if (GetKeyState('1') && 0x8000)
+	/*if (GetAsyncKeyState('1') && 0x8000)
 	{
 		moveForward(1);
 		
+	}
+	if (GetAsyncKeyState('2') && 0x8000)
+	{
+		moveForward(2);
+	}
+
+	if (GetAsyncKeyState('3') && 0x8000)
+	{
+		moveBackward(3);
+	}
+	if (GetAsyncKeyState('4') && 0x8000)
+	{
+		moveBackward(4);
+	}
+	if (GetAsyncKeyState('4') && 0x8000)
+	{
+	}*/
+
+	if (GetKeyState('1') && 0x8000)
+	{
+		moveForward(1);
+
 	}
 	if (GetKeyState('2') && 0x8000)
 	{
@@ -732,6 +760,10 @@ void Application::Update()
 	if (GetKeyState('4') && 0x8000)
 	{
 		moveBackward(4);
+	}
+	if (GetKeyState('4') && 0x8000)
+	{
+		//_gameObjects[2]->particleModel->SetAcceleration(vector3d(1.1, 100, 0.0f));
 	}
 	// Update camera
 	float angleAroundZ = XMConvertToRadians(_cameraOrbitAngleXZ);
@@ -753,7 +785,7 @@ void Application::Update()
 	}
 
 	dwTimeStart = dwTimeCur;
-	deltaTime = deltaTime - FPS_60;
+	deltaTime = deltaTime - (FPS_60*10);
 	
 }
 
