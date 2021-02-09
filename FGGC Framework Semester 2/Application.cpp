@@ -187,13 +187,15 @@ HRESULT Application::Initialise(HINSTANCE hInstance, int nCmdShow)
 	_gameObjects[1]->particleModel->SetUsingLaminarFlow(false);
 	_gameObjects[1]->_transform->SetPosition(-5.1f, 4.0f, 0.0f);
 	_gameObjects[2]->_transform->SetPosition(-5.1f, 4.0f, 0.0f);
-	_gameObjects[1]->particleModel->SetVelocity(vector3d(100.1f, 0, 0.0f));
-	_gameObjects[2]->particleModel->SetVelocity(vector3d(100.1f, 0, 0.0f));
-	_gameObjects[2]->particleModel->SetAcceleration(vector3d(1.1, 1, 0.0f));
-	_gameObjects[1]->particleModel->SetAcceleration(vector3d(1.1, 1, 0.0f));
+	_gameObjects[1]->particleModel->SetPosition(vector3d(-5.1f, 4.0f, 0.0f));
+	_gameObjects[2]->particleModel->SetPosition(vector3d(-5.1f, 4.0f, 0.0f));
+	_gameObjects[1]->particleModel->SetVelocity(vector3d(4, 5, 0.0f));
+	_gameObjects[2]->particleModel->SetVelocity(vector3d(4, 5, 0.0f));
+	_gameObjects[2]->particleModel->SetAcceleration(vector3d(0.01, 0, 0.0f));
+	_gameObjects[1]->particleModel->SetAcceleration(vector3d(0.01, 0, 0.0f));
 	_gameObjects[2]->particleModel->SetDamping(0.75f);
-	_gameObjects[2]->particleModel->SetMass(100.2);
-	_gameObjects[1]->particleModel->SetMass(10.2);
+	_gameObjects[2]->particleModel->SetMass(1000.2);
+	_gameObjects[1]->particleModel->SetMass(1000.2);
 	return S_OK;
 }
 
@@ -684,9 +686,10 @@ void Application::Cleanup()
 void Application::moveForward(int objectNumber)
 {
 	XMFLOAT3 position = _gameObjects[objectNumber]->_transform->GetPosition();
-	position.x += _gameObjects[objectNumber]->particleModel->GetPosition().x;
-	position.y += _gameObjects[objectNumber]->particleModel->GetPosition().y;
-	position.z += _gameObjects[objectNumber]->particleModel->GetPosition().z;
+	position.x = _gameObjects[objectNumber]->particleModel->GetPosition().x;
+	position.y = _gameObjects[objectNumber]->particleModel->GetPosition().y;
+	position.z = _gameObjects[objectNumber]->particleModel->GetPosition().z;
+	
 	_gameObjects[objectNumber]->_transform->SetPosition(position);
 }
 
@@ -746,11 +749,13 @@ void Application::Update()
 	if (GetKeyState('1') && 0x8000)
 	{
 		moveForward(1);
+		_gameObjects[1]->particleModel->Update(deltaTime);
 
 	}
 	if (GetKeyState('2') && 0x8000)
 	{
 		moveForward(2);
+		_gameObjects[2]->particleModel->Update(deltaTime);
 	}
 
 	if (GetKeyState('3') && 0x8000)
@@ -761,9 +766,9 @@ void Application::Update()
 	{
 		moveBackward(4);
 	}
-	if (GetKeyState('4') && 0x8000)
+	if (GetKeyState('5') && 0x8000)
 	{
-		//_gameObjects[2]->particleModel->SetAcceleration(vector3d(1.1, 100, 0.0f));
+		_gameObjects[2]->particleModel->SetAcceleration(vector3d(1.1, 100, 0.0f));
 	}
 	// Update camera
 	float angleAroundZ = XMConvertToRadians(_cameraOrbitAngleXZ);

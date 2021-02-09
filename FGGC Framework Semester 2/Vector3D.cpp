@@ -1,4 +1,4 @@
-#include "Vector3D.h"
+#include "vector3d.h"
 using namespace DirectX;
 
 vector3d::vector3d()

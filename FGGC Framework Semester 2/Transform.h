@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Vector3D.h"
+#include "vector3d.h"
 #include <DirectXMath.h>
 using namespace DirectX;
 

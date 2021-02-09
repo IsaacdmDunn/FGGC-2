@@ -21,7 +21,7 @@ GameObject::~GameObject()
 
 void GameObject::Update(float t)
 {
-	particleModel->Update(t);
+	
 
 	// Calculate world matrix
 	XMMATRIX scale = XMMatrixScaling(_transform->GetScale().x, _transform->GetScale().y, _transform->GetScale().z);

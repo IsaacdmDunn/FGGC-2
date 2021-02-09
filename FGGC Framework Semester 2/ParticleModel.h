@@ -1,5 +1,5 @@
 #pragma once
-#include "Vector3D.h"
+#include "vector3d.h"
 #include "Transform.h"
 
 class ParticleModel
@@ -66,6 +66,7 @@ public:
 	void DragForce(vector3d velocity, float dragFactor);
 	void DragLamFlow();
 	void DragTurbFlow();
+	void AddGravity();
 
 };
 
