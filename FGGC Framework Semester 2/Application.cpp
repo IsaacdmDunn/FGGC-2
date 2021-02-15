@@ -770,6 +770,17 @@ void Application::Update()
 	{
 		_gameObjects[2]->particleModel->SetAcceleration(vector3d(1.1, 100, 0.0f));
 	}
+	if (GetKeyState('6') && 0x8000)
+	{
+		//XMVECTOR XM_CALLCONV XMQuaternionRotationMatrix(FXMMATRIX M);
+		//XMFLOAT4 temp;
+		//XMStoreFloat4(&temp, XM_CALLCONV);
+		//_gameObjects[3]->particleModel->_quaternion.normalise();
+		//CalculateTransformMatrixRowMajor(temp);
+		_gameObjects[3]->particleModel->_quaternion.rotateByVector(vector3d(180,45,90));
+		_gameObjects[4]->_transform->SetPosition(0,5,0);
+		_gameObjects[5]->_transform->SetPosition(0,5,0);
+	}
 	// Update camera
 	float angleAroundZ = XMConvertToRadians(_cameraOrbitAngleXZ);
 

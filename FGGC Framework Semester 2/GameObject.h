@@ -6,6 +6,7 @@
 #include "Debug.h"
 #include "Transform.h"
 #include "ParticleModel.h"
+#include "Quarternion.h"
 
 using namespace DirectX;
 using namespace std;
@@ -69,5 +70,6 @@ private:
 
 	GameObject * _parent;
 	Debug _debug;
+	Quaternion _quaternion;
 };
 

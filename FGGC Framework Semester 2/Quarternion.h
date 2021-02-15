@@ -29,27 +29,9 @@ using namespace DirectX;
 class Quaternion
 {
 public:
-	/**
-	* Holds the real component of the quaternion.
-	*/
 	float r;
-
-	/**
-	* Holds the first complex component of the
-	* quaternion.
-	*/
 	float i;
-
-	/**
-	* Holds the second complex component of the
-	* quaternion.
-	*/
 	float j;
-
-	/**
-	* Holds the third complex component of the
-	* quaternion.
-	*/
 	float k;
 
 	/**
@@ -58,30 +40,6 @@ public:
 	*/
 	Quaternion() : r(1), i(0), j(0), k(0) {}
 
-	/**
-	* The explicit constructor creates a quaternion with the given
-	* components.
-	*
-	* @param r The real component of the rigid body's orientation
-	* quaternion.
-	*
-	* @param i The first complex component of the rigid body's
-	* orientation quaternion.
-	*
-	* @param j The second complex component of the rigid body's
-	* orientation quaternion.
-	*
-	* @param k The third complex component of the rigid body's
-	* orientation quaternion.
-	*
-	* @note The given orientation does not need to be normalised,
-	* and can be zero. This function will not alter the given
-	* values, or normalise the quaternion. To normalise the
-	* quaternion (and make a zero quaternion a legal rotation),
-	* use the normalise function.
-	*
-	* @see normalise
-	*/
 	Quaternion(const float r, const float i, const float j, const float k)
 		: r(r), i(i), j(j), k(k)
 	{

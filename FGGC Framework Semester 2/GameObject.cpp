@@ -13,6 +13,7 @@ GameObject::GameObject(string type, Geometry geometry, Material material) : _geo
 	//_debug.DebugMessage(type + " %d \n");
 	_textureRV = nullptr;
 	particleModel = new ParticleModel(_transform, { 0,0,0 }, { 0,0,0 }, 1000, { 0,0,0 });
+	
 }
 
 GameObject::~GameObject()
@@ -21,13 +22,27 @@ GameObject::~GameObject()
 
 void GameObject::Update(float t)
 {
-	
+	XMFLOAT4 f = { 10, 45, 90, 45 };
+	XMVECTOR v = { 0, 10, 10, 5 };
+
+	//
+	//XMLoadFloat4(&f);
 
 	// Calculate world matrix
 	XMMATRIX scale = XMMatrixScaling(_transform->GetScale().x, _transform->GetScale().y, _transform->GetScale().z);
 	XMMATRIX rotation = XMMatrixRotationX(_transform->GetRotation().x) * XMMatrixRotationY(_transform->GetRotation().y) * XMMatrixRotationZ(_transform->GetRotation().z);
 	XMMATRIX translation = XMMatrixTranslation(_transform->GetPosition().x, _transform->GetPosition().y, _transform->GetPosition().z);
 
+	v = XMQuaternionRotationMatrix(rotation);
+	XMStoreFloat4(&f, v);
+	_quaternion.r = f.w;
+	_quaternion.i = f.x;
+	_quaternion.j = f.y;
+	_quaternion.k = f.z;
+
+	_quaternion.normalise();
+	CalculateTransformMatrixRowMajor(translation, vector3d(_position.x, _position.y, _position.z), _quaternion);
+	rotation = XMMatrixRotationX(_transform->GetRotation().x) * XMMatrixRotationY(_transform->GetRotation().y) * XMMatrixRotationZ(_transform->GetRotation().z);
 	XMStoreFloat4x4(&_world, scale * rotation * translation);
 
 	if (_parent != nullptr)
@@ -35,8 +50,6 @@ void GameObject::Update(float t)
 		XMStoreFloat4x4(&_world, this->GetWorldMatrix() * _parent->GetWorldMatrix());
 	}
 
-	
-	//_debug.DebugMessage();
 }
 
 void GameObject::Draw(ID3D11DeviceContext * pImmediateContext)

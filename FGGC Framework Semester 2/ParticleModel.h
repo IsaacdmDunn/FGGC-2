@@ -1,11 +1,13 @@
 #pragma once
 #include "vector3d.h"
 #include "Transform.h"
+#include "Quarternion.h"
 
 class ParticleModel
 {
 protected:
 	vector3d _position;
+	vector3d _rotation;
 	vector3d _accelleration;
 	vector3d _velocity;
 	float _damping;
@@ -68,5 +70,6 @@ public:
 	void DragTurbFlow();
 	void AddGravity();
 
+	Quaternion _quaternion;
 };
 
